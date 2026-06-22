@@ -21,6 +21,8 @@ namespace APT
             this.btnUC04 = new System.Windows.Forms.Button();
             this.btnUC05 = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
+            this.btnLedger = new System.Windows.Forms.Button();
+            this.btnPayroll = new System.Windows.Forms.Button();
             this.SuspendLayout();
 
             // lblWelcome
@@ -68,11 +70,29 @@ namespace APT
             this.btnUC05.UseVisualStyleBackColor = true;
             this.btnUC05.Click += new System.EventHandler(this.btnUC05_Click);
 
+            // btnLedger
+            this.btnLedger.Location = new System.Drawing.Point(150, 340);
+            this.btnLedger.Name = "btnLedger";
+            this.btnLedger.Size = new System.Drawing.Size(300, 50);
+            this.btnLedger.TabIndex = 5;
+            this.btnLedger.Text = "ניהול תנועות יומן (כרטסת)";
+            this.btnLedger.UseVisualStyleBackColor = true;
+            this.btnLedger.Click += new System.EventHandler(this.btnLedger_Click);
+
+            // btnPayroll
+            this.btnPayroll.Location = new System.Drawing.Point(150, 400);
+            this.btnPayroll.Name = "btnPayroll";
+            this.btnPayroll.Size = new System.Drawing.Size(300, 50);
+            this.btnPayroll.TabIndex = 6;
+            this.btnPayroll.Text = "ניהול רשומות שכר";
+            this.btnPayroll.UseVisualStyleBackColor = true;
+            this.btnPayroll.Click += new System.EventHandler(this.btnPayroll_Click);
+
             // btnLogout
             this.btnLogout.Location = new System.Drawing.Point(150, 680);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(300, 40);
-            this.btnLogout.TabIndex = 5;
+            this.btnLogout.TabIndex = 7;
             this.btnLogout.Text = "יציאה";
             this.btnLogout.UseVisualStyleBackColor = true;
             this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
@@ -81,6 +101,8 @@ namespace APT
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnLogout);
+            this.Controls.Add(this.btnLedger);
+            this.Controls.Add(this.btnPayroll);
             this.Controls.Add(this.btnUC05);
             this.Controls.Add(this.btnUC04);
             this.Controls.Add(this.btnUC03);
@@ -99,5 +121,7 @@ namespace APT
         private System.Windows.Forms.Button btnUC04;
         private System.Windows.Forms.Button btnUC05;
         private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Button btnLedger;
+        private System.Windows.Forms.Button btnPayroll;
     }
 }

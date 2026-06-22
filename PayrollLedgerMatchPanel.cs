@@ -15,7 +15,7 @@ namespace APT
             InitializeComponent();
             this.currentUser = user;
             LoadMatchesList();
-            cmbMatchStatus.Items.AddRange(new object[] { "Matched", "Flagged", "RequiresReview" });
+            cmbMatchStatus.Items.AddRange(new object[] { "Matched", "Unmatched", "Variance", "Requires Review" });
             cmbMatchStatus.SelectedIndex = 0;  // ברירת מחדל — מונע NRE בשמירה
         }
 
@@ -258,41 +258,84 @@ namespace APT
                     return;
                 }
 
-                // Calculate total payroll amount
-                decimal totalPayroll = 0;
+                // --- צד השכר: סך השכר ברוטו של כל העובדים בתיק ובתקופה ---
+                decimal totalGross = 0;
                 foreach (var pr in payrollRecords)
+                    totalGross += pr.getGrossAmount();
+
+                if (totalGross == 0)
                 {
-                    totalPayroll += pr.getTotalCost();
+                    MessageBox.Show("סך השכר ברוטו לתיק/תקופה הוא 0 — לא ניתן להצליב", "אזהרה");
+                    return;
                 }
 
-                // Calculate total ledger amount
-                decimal totalLedger = 0;
+                // --- צד הכרטסת: רק חשבונות שכר/הוצאות שכר (לא כלל החשבונות) ---
+                // התאמה כלכלית: סך השכר ברוטו אמור להירשם בחשבון 'הוצאות שכר' בכרטסת.
+                var salaryAccounts = new List<LedgerEntry>();
                 foreach (var le in ledgerEntries)
                 {
-                    totalLedger += le.getAmount();
+                    string name = (le.getAccountName() ?? "").ToLowerInvariant();
+                    if (name.Contains("salar") || name.Contains("wage") || name.Contains("payroll") || name.Contains("שכר"))
+                        salaryAccounts.Add(le);
+                }
+                // נפילה לאחור: אם אין חשבון ששמו 'שכר', נשתמש בכל חשבונות ההוצאות
+                if (salaryAccounts.Count == 0)
+                    foreach (var le in ledgerEntries)
+                        if (string.Equals(le.getAccountType(), "Expense", StringComparison.OrdinalIgnoreCase))
+                            salaryAccounts.Add(le);
+                if (salaryAccounts.Count == 0)
+                {
+                    MessageBox.Show("לא נמצא חשבון הוצאות שכר בכרטסת לתיק/תקופה זו", "אזהרה");
+                    return;
                 }
 
-                // Calculate variance
-                decimal variance = Math.Abs(totalPayroll - totalLedger);
-                string matchStatus = (variance <= threshold) ? "Matched" : "RequiresReview";
+                decimal ledgerSalaries = 0;
+                foreach (var le in salaryAccounts)
+                    ledgerSalaries += le.getAmount();
 
-                // Create match record
-                int nextId = PayrollLedgerMatch.getNextMatchId();
-                int payrollId = payrollRecords[0].getPayrollId();
-                int entryId = ledgerEntries[0].getEntryId();
+                // --- סטיה כוללת והכרעת סטטוס מול הסף (ערכים תקפים מול אילוץ ה-CHECK ב-DB) ---
+                decimal totalVariance = Math.Abs(totalGross - ledgerSalaries);
+                string matchStatus = (totalVariance <= threshold) ? "Matched" : "Requires Review";
 
-                PayrollLedgerMatch newMatch = new PayrollLedgerMatch(nextId, payrollId, entryId, caseId,
-                    matchStatus, variance, DateTime.Now, $"Auto-matched: Payroll={totalPayroll}, Ledger={totalLedger}", true);
+                // חשבון השכר הראשי — ה-FK האמיתי של צד הכרטסת בכל שורות ההתאמה
+                LedgerEntry salariesEntry = salaryAccounts[0];
 
-                // Update summary
-                lblVarianceSummary.Text = $"סה\"כ סטיה: ₪{variance:F2} | סטטוס: {matchStatus}";
+                // הסרת התאמות קודמות של חשבון השכר לתיק זה — מאפשר הרצה חוזרת בלי להפר את UQ_PayrollLedgerMatches_Pair (payroll_id, entry_id)
+                var toRemove = new List<PayrollLedgerMatch>();
+                foreach (var m in Program.PayrollLedgerMatches)
+                    if (m.getCaseId() == caseId && m.getEntryId() == salariesEntry.getEntryId())
+                        toRemove.Add(m);
+                foreach (var m in toRemove)
+                    m.deletePayrollLedgerMatch();
+
+                // --- שורת התאמה לכל עובד עם FK-ים אמיתיים (עובד <-> חשבון שכר) ---
+                // הסטיה לעובד = ההפרש בין שכרו בפועל לחלקו היחסי הצפוי בחשבון השכר;
+                // כשהסכומים מתאזנים הסטיה לכל עובד 0, וסכום הסטיות = הסטיה הכוללת.
+                int matchedCount = 0;
+                foreach (var pr in payrollRecords)
+                {
+                    decimal expectedShare = ledgerSalaries * (pr.getGrossAmount() / totalGross);
+                    decimal empVariance = Math.Abs(pr.getGrossAmount() - expectedShare);
+
+                    int nextId = PayrollLedgerMatch.getNextMatchId();
+                    PayrollLedgerMatch m = new PayrollLedgerMatch(nextId, pr.getPayrollId(), salariesEntry.getEntryId(),
+                        caseId, matchStatus, empVariance, DateTime.Now,
+                        $"{pr.getEmployeeName()}: ברוטו ₪{pr.getGrossAmount():F2} מול חשבון '{salariesEntry.getAccountName()}'", true);
+                    m.setPayrollRecord(pr);
+                    m.setLedgerEntry(salariesEntry);
+                    matchedCount++;
+                }
+
+                // --- סיכום ---
+                lblVarianceSummary.Text = $"סטיה כוללת: ₪{totalVariance:F2} | סטטוס: {matchStatus} | {matchedCount} עובדים";
 
                 MessageBox.Show(
-                    $"התאמה הושלמה בהצלחה\n\n" +
-                    $"סה\"כ משכורה: ₪{totalPayroll:F2}\n" +
-                    $"סה\"כ חשבונות: ₪{totalLedger:F2}\n" +
-                    $"סטיה: ₪{variance:F2}\n" +
-                    $"סטטוס: {matchStatus}",
+                    $"הצלבה הושלמה\n\n" +
+                    $"סך שכר ברוטו: ₪{totalGross:F2}\n" +
+                    $"סך חשבונות שכר בכרטסת: ₪{ledgerSalaries:F2} ({salaryAccounts.Count} חשבונות)\n" +
+                    $"סטיה כוללת: ₪{totalVariance:F2}  (סף: ₪{threshold:F2})\n" +
+                    $"סטטוס: {matchStatus}\n" +
+                    $"נוצרו {matchedCount} שורות התאמה — אחת לכל עובד",
                     "תוצאה");
 
                 LoadMatchesList();

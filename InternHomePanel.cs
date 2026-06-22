@@ -40,6 +40,16 @@ namespace APT
             MessageBox.Show("UC-05: Generate Financial Reports - ניהול דוחות", "לא זמין לאינטרן");
         }
 
+        private void btnLedger_Click(object sender, EventArgs e)
+        {
+            mainForm.showPanel(new LedgerEntryPanel(currentUser));
+        }
+
+        private void btnPayroll_Click(object sender, EventArgs e)
+        {
+            mainForm.showPanel(new PayrollRecordPanel(currentUser));
+        }
+
         private void btnLogout_Click(object sender, EventArgs e)
         {
             mainForm.showPanel(new LoginPanel());

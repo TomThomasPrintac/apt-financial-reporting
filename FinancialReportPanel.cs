@@ -169,6 +169,7 @@ namespace APT
                     return;
                 }
                 selectedReport.sign();
+                selectedReport.updateFinancialReport();   // שמירת החתימה ל-DB: isSigned / signedDate / status
                 MessageBox.Show("הדוח נחתם בהצלחה", "הצלחה", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadReportsList();
             }
