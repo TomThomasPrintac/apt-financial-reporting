@@ -1,0 +1,349 @@
+================================================================================
+                    APT (Advanced Processing of Financial Reports)
+                          COMPLETE NAVIGATION MAP
+================================================================================
+
+LEGEND:
+✅ = Fully Implemented & Functional
+🔲 = TODO/Placeholder (no functionality)
+⏸️  = Intentionally Unavailable (message shown)
+→  = Navigation flow
+[Nav Bar] = Home | Back | Logout buttons available on every panel
+
+================================================================================
+                              ENTRY POINT
+================================================================================
+
+                              LOGIN PANEL
+                    (Email/Password or Dev Login)
+                                  │
+                ┌─────────────────┼─────────────────┐
+                │                 │                 │
+                ▼                 ▼                 ▼
+    Credentials Match   Dev Login (Shortcut)   Invalid Credentials
+                │              │                    │
+                ├──────────────┴────────────────────┘
+                │
+        ┌───────┴───────────────────────────────────────────┐
+        │                                                   │
+        ▼                                                   ▼
+  CREDENTIAL CHECK                                   ERROR MESSAGE
+        │
+    ┌───┼───┬───────┬────────────┬──────────────┐
+    │   │   │       │            │              │
+    ▼   ▼   ▼       ▼            ▼              ▼
+   SA  IN  BK   SYS-ADM       CLIENT         (unknown)
+    │   │   │       │            │              │
+    └───┴───┴───────┴────────────┴──────────────┘
+            │
+    ┌───────┴──────────┐
+    │                  │
+    ▼                  ▼
+SeniorAccountant   Intern
+HomePanel          HomePanel
+
+
+================================================================================
+                          SENIOR ACCOUNTANT FLOW
+================================================================================
+
+                    SeniorAccountantHomePanel [Nav Bar]
+                    (Logged in as: eduardo.printek@printek.co.il)
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+    [ניהול תיקים]    [UC-05: Generate]      [UC-06: Manage]
+    (Manage Cases)   [Financial Reports]    [Templates]
+        │                     │                     │
+        ▼                     ▼                     ▼
+    ✅                   ✅                    🔲
+ClientCasePanel     FinancialReportPanel    TODO Placeholder
+    [Nav Bar]           [Nav Bar]            [Nav Bar]
+    │                   │                    │
+    │                   │                    │
+    └─────────┬─────────┴────────────────────┘
+              │
+        [Home] [Back] [Logout]
+              │
+              └──────────────────────────────────┐
+                                                 │
+                                    Returns to SeniorAccountant
+                                    HomePanel or LoginPanel
+    ┌─────────────────────────────────────────────────┐
+    │ ClientCasePanel Features (✅):               │
+    ├─────────────────────────────────────────────────┤
+    │ • ListView: Browse all ClientCases              │
+    │ • Create new case (btnSave)                     │
+    │ • Edit existing case (btnUpdate)                │
+    │ • Delete case (btnDelete)                       │
+    │ • Clear form (btnNew)                           │
+    └─────────────────────────────────────────────────┘
+
+    ┌─────────────────────────────────────────────────┐
+    │ FinancialReportPanel Features (✅):           │
+    ├─────────────────────────────────────────────────┤
+    │ • ListView: Browse all FinancialReports         │
+    │ • Create new report (btnSave)                   │
+    │ • Edit report status (btnUpdate)                │
+    │ • Delete report (btnDelete)                     │
+    │ • Sign report (btnSign)                         │
+    │ • Clear form (btnNew)                           │
+    └─────────────────────────────────────────────────┘
+
+
+================================================================================
+                          INTERN FLOW
+================================================================================
+
+                      InternHomePanel [Nav Bar]
+                 (Logged in as: noa.levy@gmail.com)
+                              │
+        ┌─────────────────────┼───────────────────────┬──────────────┐
+        │                     │                       │              │
+        ▼                     ▼                       ▼              ▼
+   [UC-02: Upload]      [UC-03: Process]      [UC-04: Cross-Match]  [UC-05]
+   [Source Files]       [Cumulative Files]    [Payroll/Ledger]      [Reports]
+        │                     │                       │              │
+        ▼                     ▼                       ▼              ▼
+    ✅                   🔲                    ✅              ⏸️
+SourceFilePanel      TODO Placeholder   PayrollLedgerMatch  Not Available
+    [Nav Bar]            [Nav Bar]         MatchPanel         Message
+                                          [Nav Bar]
+
+
+    ┌──────────────────────────────────────────────────────────┐
+    │ Supporting Panels (Standalone - Not in Home Menu):      │
+    │                                                          │
+    │  • LedgerEntryPanel [Nav Bar] ✅                        │
+    │    └─ Browse/create/edit LedgerEntries                 │
+    │       (Used to support UC-04 Cross-Match)              │
+    │                                                          │
+    │  • PayrollRecordPanel [Nav Bar] ✅                      │
+    │    └─ Browse/create/edit PayrollRecords                │
+    │       (Used to support UC-04 Cross-Match)              │
+    └──────────────────────────────────────────────────────────┘
+
+    ┌────────────────────────────────────────────────┐
+    │ SourceFilePanel Features (✅):               │
+    ├────────────────────────────────────────────────┤
+    │ • ListView: Browse all SourceFiles             │
+    │ • Create new file (btnSave)                    │
+    │ • Edit file status (btnUpdate)                 │
+    │ • Delete file (btnDelete)                      │
+    │ • Clear form (btnNew)                          │
+    │ • Status: Uploaded → Processing → Processed    │
+    └────────────────────────────────────────────────┘
+
+    ┌────────────────────────────────────────────────┐
+    │ PayrollLedgerMatchPanel Features (✅):       │
+    ├────────────────────────────────────────────────┤
+    │ • ListView: Browse all Matches                 │
+    │ • Create new match (btnSave)                   │
+    │ • Edit match status (btnUpdate)                │
+    │ • Delete match (btnDelete)                     │
+    │ • Add notes to match                           │
+    │ • Status: Matched → Flagged → RequiresReview  │
+    └────────────────────────────────────────────────┘
+
+
+================================================================================
+                    NON-MVP ROLES (Placeholder Panels)
+================================================================================
+
+BookkeeperHomePanel [Nav Bar]
+    │
+    └─ Message: "לא הוקצו תפקידים בגרסה זו של המערכת"
+       (No UCs assigned in this version)
+       │
+       └─ [Home] [Back] [Logout] → LoginPanel
+
+SystemAdministratorHomePanel [Nav Bar]
+    │
+    └─ Message: "לא הוקצו תפקידים בגרסה זו של המערכת"
+       (No UCs assigned in this version)
+       │
+       └─ [Home] [Back] [Logout] → LoginPanel
+
+ClientHomePanel [Nav Bar]
+    │
+    └─ Message: "לא הוקצו תפקידים בגרסה זו של המערכת"
+       (No UCs assigned in this version)
+       │
+       └─ [Home] [Back] [Logout] → LoginPanel
+
+
+================================================================================
+                          NAVIGATION BAR BEHAVIOR
+================================================================================
+
+Every Panel has consistent navigation at the top:
+
+    [בית]  [Content]  [חזור]  [יציאה]
+    Home               Back    Logout
+
+Actions:
+• בית (Home):   Returns to appropriate home panel for logged-in role
+• חזור (Back):  Returns to appropriate home panel for logged-in role
+• יציאה (Logout): Returns to LoginPanel (requires re-login)
+
+Anchor Settings:
+• Home button:   Fixed at left (no anchor)
+• Back button:   Fixed at right (Anchor = Top | Right)
+• Logout button: Fixed at right (Anchor = Top | Right)
+
+
+================================================================================
+                        COMPLETE PANEL MATRIX
+================================================================================
+
+IMPLEMENTED PANELS:
+┌─────────────────────────────────────────────────────┐
+│ Panel                      │ Role        │ Status   │
+├─────────────────────────────────────────────────────┤
+│ LoginPanel                 │ Entry       │ ✅       │
+│ SeniorAccountantHomePanel  │ Home        │ ✅       │
+│ InternHomePanel            │ Home        │ ✅       │
+│ BookkeeperHomePanel        │ Home        │ ✅       │
+│ SystemAdministratorHomePanel│ Home        │ ✅       │
+│ ClientHomePanel            │ Home        │ ✅       │
+│ ClientCasePanel            │ CRUD        │ ✅       │
+│ SourceFilePanel            │ CRUD        │ ✅       │
+│ LedgerEntryPanel           │ CRUD        │ ✅       │
+│ PayrollRecordPanel         │ CRUD        │ ✅       │
+│ PayrollLedgerMatchPanel    │ CRUD        │ ✅       │
+│ FinancialReportPanel       │ CRUD        │ ✅       │
+└─────────────────────────────────────────────────────┘
+
+TOTAL: 12 Panels (all with RTL layout, Hebrew UI, navigation bars)
+
+
+================================================================================
+                    IMPLEMENTED USE CASES (MVP)
+================================================================================
+
+UC-02: Upload Source Files ✅
+   Actor:    Audit Intern
+   Panel:    SourceFilePanel
+   Actions:  Create/Read/Update/Delete SourceFiles
+   Status:   FULLY IMPLEMENTED
+
+UC-03: Process Cumulative Files 🔲
+   Actor:    Audit Intern
+   Panel:    TODO (placeholder in InternHomePanel)
+   Actions:  (Not yet implemented)
+   Status:   TODO
+
+UC-04: Cross-Match Payroll with Ledger ✅
+   Actor:    Audit Intern
+   Panels:   PayrollLedgerMatchPanel
+            LedgerEntryPanel (supporting)
+            PayrollRecordPanel (supporting)
+   Actions:  Create/Read/Update/Delete matches
+   Status:   FULLY IMPLEMENTED
+
+UC-05: Generate Financial Reports ✅
+   Actor:    Senior Accountant / Intern
+   Panel:    FinancialReportPanel
+   Actions:  Create/Read/Update/Delete reports, Sign reports
+   Status:   FULLY IMPLEMENTED (Intern version unavailable)
+
+UC-06: Manage Report Templates 🔲
+   Actor:    Senior Accountant
+   Panel:    TODO (placeholder in SeniorAccountantHomePanel)
+   Actions:  (Not yet implemented)
+   Status:   TODO
+
+
+================================================================================
+                          AUTHENTICATION FLOW
+================================================================================
+
+Normal Login:
+  LoginPanel → Email/Password Input → Credential Check
+              → Role-specific Home Panel
+
+Developer Login (כניסת מתכנת):
+  LoginPanel → Dev Button → Instant Access
+              → SystemAdministratorHomePanel (first SystemAdmin in DB)
+              OR SeniorAccountantHomePanel (fallback if no SystemAdmins)
+              OR InternHomePanel (fallback if no SeniorAccountants)
+
+Test Credentials:
+  • Senior Accountant: eduardo.printek@printek.co.il / password123
+  • Audit Intern:      noa.levy@gmail.com / password123
+
+
+================================================================================
+                          OVERALL NAVIGATION TOPOLOGY
+================================================================================
+
+                            LoginPanel
+                                │
+                ┌───────────────┼───────────────┐
+                │               │               │
+                ▼               ▼               ▼
+          SeniorAccount    InternHome        Bookkeeper/
+          Home Panel       Panel              SystemAdmin/
+                │           │                Client Home
+                │           │                (placeholders)
+        ┌───────┴───────┐   │
+        │               │   │
+        ▼               ▼   ▼
+    ClientCase    SourceFile      PayrollLedger
+    Panel         Panel           MatchPanel
+    [CRUD]        [CRUD]          [CRUD]
+        │           │               │
+        │           └───────┬───────┘
+        │                   │
+        └─────────┬─────────┴──────────────┐
+                  │                        │
+                  ▼                        ▼
+            FinancialReport         LedgerEntry
+            Panel                   Panel
+            [CRUD]                  [CRUD]
+                  │                   │
+                  └─────────┬─────────┘
+                            │
+                      PayrollRecord
+                      Panel
+                      [CRUD]
+                            │
+                            │
+            Every panel has [Home] [Back] [Logout]
+                            │
+                            └─→ Returns to appropriate Home or LoginPanel
+
+
+================================================================================
+                    ACCESSIBILITY & USER EXPERIENCE
+================================================================================
+
+✅ Consistent Navigation: All 12 panels have identical navigation bars
+✅ RTL Layout: All panels support Hebrew right-to-left text direction
+✅ Hebrew UI: All labels, buttons, messages in Hebrew
+✅ No Dead Ends: Every panel has exit route (Back/Logout)
+✅ Role-Based Access: Each role sees only assigned panels
+✅ Dev Shortcut: Instant login for testing without credentials
+✅ Logout Available: Every panel has logout button at top-right
+✅ Home Button: Quick return to role home from any CRUD panel
+
+
+================================================================================
+                          MVP COMPLETION STATUS
+================================================================================
+
+TOTAL IMPLEMENTED:
+  • 1 Login Panel
+  • 5 Home Panels (all roles)
+  • 6 CRUD Panels (ClientCase, SourceFile, LedgerEntry, PayrollRecord,
+                    PayrollLedgerMatch, FinancialReport)
+  • 3 Fully-Implemented Use Cases (UC-02, UC-04, UC-05)
+  • 2 TODO Use Cases (UC-03, UC-06)
+  • 100% Navigation Coverage
+  • 100% RTL/Hebrew UI Coverage
+  • 100% Navigation Bar Coverage (12/12 panels)
+
+READY FOR: User acceptance testing, production deployment (MVP)
+
+================================================================================

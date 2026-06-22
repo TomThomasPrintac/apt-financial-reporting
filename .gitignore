@@ -1,0 +1,46 @@
+# =====================================================================
+#  APT — .gitignore (.NET 8 / WinForms)
+# =====================================================================
+
+# ---- Project-specific ----
+cloned/
+.mcp.json
+
+# ---- Build output ----
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# ---- Visual Studio / Rider / VS Code ----
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ---- NuGet ----
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ---- Runtime logs ----
+*.log
+
+# ---- Visual Paradigm auto-backups (the .vpp model itself IS tracked) ----
+*.vpp.bak*
+
+# ---- OS clutter ----
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,28 @@
+NAVIGATION BAR TEMPLATE - Apply to all CRUD Panels
+
+PATTERN FOR EACH PANEL:
+1. In Designer.cs InitializeComponent(), add after SuspendLayout():
+   - Create navPanel (Panel) at (0,0) size (1024,50) gray background
+   - Add btnHome button at (10,10) size (80,30) text "בית"
+   - Add btnNavBack button at (934,10) size (80,30) text "חזור" with Anchor Top|Right
+   - Add btnNavLogout button at (844,10) size (80,30) text "יציאה" with Anchor Top|Right
+   - Add all buttons to navPanel.Controls
+   - Add navPanel to this.Controls
+
+2. In Designer.cs, adjust all existing Y coordinates:
+   - ListView/Grid locations: +60 (e.g., 20 → 80)
+   - Button locations: +60 (e.g., 250 → 310)
+   - Label locations: +60
+
+3. In code-behind (.cs), add three event handlers:
+   - btnHome_Click() → mainForm.showPanel(new <HomePanel>(currentUser))
+   - btnNavBack_Click() → mainForm.showPanel(new <HomePanel>(currentUser))
+   - btnNavLogout_Click() → mainForm.showPanel(new LoginPanel())
+
+PANELS TO UPDATE:
+□ SourceFilePanel (opens from InternHomePanel)
+□ LedgerEntryPanel (opens from InternHomePanel)
+□ PayrollRecordPanel (opens from InternHomePanel)
+□ PayrollLedgerMatchPanel (opens from InternHomePanel)
+□ FinancialReportPanel (opens from SeniorAccountantHomePanel)
+
