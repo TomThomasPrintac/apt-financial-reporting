@@ -13,9 +13,10 @@ namespace APT
             InitializeComponent();
             this.currentUser = user;
             LoadReportsList();
-            cmbReportType.Items.AddRange(new object[] { "BalanceSheet", "IncomeStatement", "CashFlow" });
-            cmbReportFormat.Items.AddRange(new object[] { "PDF", "Excel", "Word" });
-            cmbStatus.Items.AddRange(new object[] { "Generated", "Signed", "Submitted" });
+            // ערכים תואמים בדיוק לאילוצי ה-CHECK ב-DB (CK_FinancialReports_ReportType/ReportFormat/Status)
+            cmbReportType.Items.AddRange(new object[] { "Balance Sheet", "P&L", "Cash Flow" });
+            cmbReportFormat.Items.AddRange(new object[] { "PDF", "Excel" });
+            cmbStatus.Items.AddRange(new object[] { "Draft", "Generated", "Signed", "Submitted" });
             // ברירות מחדל — מונע NRE בשמירה
             cmbReportType.SelectedIndex = 0;
             cmbReportFormat.SelectedIndex = 0;
