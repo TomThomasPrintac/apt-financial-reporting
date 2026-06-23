@@ -19,6 +19,7 @@ namespace APT
             this.btnManageCases = new System.Windows.Forms.Button();
             this.btnUC05 = new System.Windows.Forms.Button();
             this.btnUC06 = new System.Windows.Forms.Button();
+            this.btnUploadFiles = new System.Windows.Forms.Button();
             this.btnLogout = new System.Windows.Forms.Button();
             this.SuspendLayout();
 
@@ -58,6 +59,15 @@ namespace APT
             this.btnUC06.UseVisualStyleBackColor = true;
             this.btnUC06.Click += new System.EventHandler(this.btnUC06_Click);
 
+            // btnUploadFiles
+            this.btnUploadFiles.Location = new System.Drawing.Point(150, 280);
+            this.btnUploadFiles.Name = "btnUploadFiles";
+            this.btnUploadFiles.Size = new System.Drawing.Size(300, 50);
+            this.btnUploadFiles.TabIndex = 5;
+            this.btnUploadFiles.Text = "העלאת קבצי מקור (UC-02)";
+            this.btnUploadFiles.UseVisualStyleBackColor = true;
+            this.btnUploadFiles.Click += new System.EventHandler(this.btnUploadFiles_Click);
+
             // btnLogout
             this.btnLogout.Location = new System.Drawing.Point(150, 680);
             this.btnLogout.Name = "btnLogout";
@@ -71,6 +81,7 @@ namespace APT
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnLogout);
+            this.Controls.Add(this.btnUploadFiles);
             this.Controls.Add(this.btnUC06);
             this.Controls.Add(this.btnUC05);
             this.Controls.Add(this.btnManageCases);
@@ -86,6 +97,7 @@ namespace APT
         private System.Windows.Forms.Button btnManageCases;
         private System.Windows.Forms.Button btnUC05;
         private System.Windows.Forms.Button btnUC06;
+        private System.Windows.Forms.Button btnUploadFiles;
         private System.Windows.Forms.Button btnLogout;
     }
 }

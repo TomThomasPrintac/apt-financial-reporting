@@ -14,6 +14,22 @@ namespace APT
         public LoginPanel()
         {
             InitializeComponent();
+            LoadLogo();
+        }
+
+        // טעינת לוגו החברה ל-PictureBox (בלי לנעול את הקובץ)
+        private void LoadLogo()
+        {
+            foreach (string p in new[] {
+                System.IO.Path.Combine(System.AppContext.BaseDirectory, "logo.png"),
+                System.IO.Path.Combine(System.Environment.CurrentDirectory, "logo.png") })
+            {
+                if (System.IO.File.Exists(p))
+                {
+                    picLogo.Image = System.Drawing.Image.FromStream(new System.IO.MemoryStream(System.IO.File.ReadAllBytes(p)));
+                    break;
+                }
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

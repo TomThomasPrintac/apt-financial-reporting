@@ -21,7 +21,16 @@ namespace APT
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnDevLogin = new System.Windows.Forms.Button();
+            this.picLogo = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
+
+            // picLogo — לוגו החברה במסך הכניסה
+            this.picLogo.Location = new System.Drawing.Point(412, 15);
+            this.picLogo.Size = new System.Drawing.Size(200, 130);
+            this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picLogo.BackColor = System.Drawing.Color.White;
+            this.picLogo.Name = "picLogo";
 
             // lblEmail
             this.lblEmail.AutoSize = true;
@@ -73,6 +82,7 @@ namespace APT
             // LoginPanel
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.picLogo);
             this.Controls.Add(this.btnDevLogin);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.txtPassword);
@@ -82,6 +92,7 @@ namespace APT
             this.Name = "LoginPanel";
             this.Size = new System.Drawing.Size(1024, 768);
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -92,5 +103,6 @@ namespace APT
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnDevLogin;
+        private System.Windows.Forms.PictureBox picLogo;
     }
 }

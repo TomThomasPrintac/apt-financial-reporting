@@ -46,6 +46,10 @@ namespace APT
             this.dtSignedDate = new System.Windows.Forms.DateTimePicker();
             this.cmbStatus = new System.Windows.Forms.ComboBox();
             this.txtSeniorAccountantId = new System.Windows.Forms.TextBox();
+            this.lblPeriodStart = new System.Windows.Forms.Label();
+            this.dtPeriodStart = new System.Windows.Forms.DateTimePicker();
+            this.lblPeriodEnd = new System.Windows.Forms.Label();
+            this.dtPeriodEnd = new System.Windows.Forms.DateTimePicker();
             this.btnNew = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
@@ -112,6 +116,12 @@ namespace APT
             lblSeniorAccountantId.AutoSize = true; lblSeniorAccountantId.Location = new Point(700, y); lblSeniorAccountantId.Text = "רואה חשבון";
             txtSeniorAccountantId.Location = new Point(580, y); txtSeniorAccountantId.ReadOnly = true; txtSeniorAccountantId.Size = new Size(100, 22); y += 30;
 
+            lblPeriodStart.AutoSize = true; lblPeriodStart.Location = new Point(700, y); lblPeriodStart.Text = "תקופה מתאריך";
+            dtPeriodStart.Location = new Point(560, y); dtPeriodStart.Size = new Size(120, 22); dtPeriodStart.Format = System.Windows.Forms.DateTimePickerFormat.Short; y += 30;
+
+            lblPeriodEnd.AutoSize = true; lblPeriodEnd.Location = new Point(700, y); lblPeriodEnd.Text = "תקופה עד תאריך";
+            dtPeriodEnd.Location = new Point(560, y); dtPeriodEnd.Size = new Size(120, 22); dtPeriodEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short; y += 30;
+
             btnNew.Location = new Point(20, 310); btnNew.Size = new Size(120, 35); btnNew.Text = "חדש";
             btnNew.Click += (s, e) => btnNew_Click(s, e); this.toolTip.SetToolTip(btnNew, "צור דוח חדש");
 
@@ -138,7 +148,7 @@ btnBack.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
 
             this.Controls.AddRange(new Control[] { this.navPanel, this.lblTitle, listReports, lblReportId, txtReportId, lblCaseId, txtCaseId, lblReportType, cmbReportType,
                 lblReportFormat, cmbReportFormat, lblGeneratedDate, dtGeneratedDate, lblIsSigned, chkIsSigned, lblSignedDate, dtSignedDate,
-                lblStatus, cmbStatus, lblSeniorAccountantId, txtSeniorAccountantId, btnNew, btnSave, btnUpdate, btnDelete, btnSign, btnBack });
+                lblStatus, cmbStatus, lblSeniorAccountantId, txtSeniorAccountantId, lblPeriodStart, dtPeriodStart, lblPeriodEnd, dtPeriodEnd, btnNew, btnSave, btnUpdate, btnDelete, btnSign, btnBack });
 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -171,6 +181,10 @@ btnBack.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
         private System.Windows.Forms.DateTimePicker dtSignedDate;
         private System.Windows.Forms.ComboBox cmbStatus;
         private System.Windows.Forms.TextBox txtSeniorAccountantId;
+        private System.Windows.Forms.Label lblPeriodStart;
+        private System.Windows.Forms.DateTimePicker dtPeriodStart;
+        private System.Windows.Forms.Label lblPeriodEnd;
+        private System.Windows.Forms.DateTimePicker dtPeriodEnd;
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnUpdate;

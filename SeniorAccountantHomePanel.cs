@@ -32,7 +32,14 @@ namespace APT
 
         private void btnUC06_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("UC-06: Manage Report Templates\n(TODO)", "פונקציה לא מוגדרת");
+            // UC-06 — ניהול תבניות דוחות (לפי סוג קובץ מקור)
+            mainForm.showPanel(new ReportTemplateMenuPanel(currentUser));
+        }
+
+        private void btnUploadFiles_Click(object sender, EventArgs e)
+        {
+            // פתיחת מסך העלאת קבצי מקור (UC-02) — תואם תפקיד, חוזר לתפריט הבכיר
+            mainForm.showPanel(new SourceFilePanel(currentUser));
         }
 
         private void btnLogout_Click(object sender, EventArgs e)

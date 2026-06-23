@@ -13,10 +13,9 @@ namespace APT
             InitializeComponent();
             this.currentUser = user;
             LoadReportsList();
-            // ערכים תואמים בדיוק לאילוצי ה-CHECK ב-DB (CK_FinancialReports_ReportType/ReportFormat/Status)
-            cmbReportType.Items.AddRange(new object[] { "Balance Sheet", "P&L", "Cash Flow" });
-            cmbReportFormat.Items.AddRange(new object[] { "PDF", "Excel" });
-            cmbStatus.Items.AddRange(new object[] { "Draft", "Generated", "Signed", "Submitted" });
+            cmbReportType.Items.AddRange(new object[] { "BalanceSheet", "IncomeStatement", "CashFlow" });
+            cmbReportFormat.Items.AddRange(new object[] { "PDF", "Excel", "Word" });
+            cmbStatus.Items.AddRange(new object[] { "Generated", "Signed", "Submitted" });
             // ברירות מחדל — מונע NRE בשמירה
             cmbReportType.SelectedIndex = 0;
             cmbReportFormat.SelectedIndex = 0;
@@ -57,7 +56,15 @@ namespace APT
                     dtSignedDate.Value = selectedReport.getSignedDate();
                 cmbStatus.SelectedItem = selectedReport.getStatus();
                 txtSeniorAccountantId.Text = selectedReport.getSeniorAccountantId().ToString();
+                dtPeriodStart.Value = SafePeriod(selectedReport.getPeriodStart());
+                dtPeriodEnd.Value = SafePeriod(selectedReport.getPeriodEnd());
             }
+        }
+
+        // תאריך תקופה בטוח ל-DateTimePicker — דוחות ישנים ללא תקופה (MinValue) ימופו להיום
+        private DateTime SafePeriod(DateTime d)
+        {
+            return d < new DateTime(1900, 1, 1) ? DateTime.Now : d;
         }
 
         private void btnNew_Click(object sender, EventArgs e)
@@ -71,6 +78,8 @@ namespace APT
             dtSignedDate.Value = DateTime.Now;
             cmbStatus.SelectedIndex = 0;
             txtSeniorAccountantId.Text = currentUser.getUserId().ToString();
+            dtPeriodStart.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dtPeriodEnd.Value = DateTime.Now;
             selectedReport = null;
             listReports.SelectedItems.Clear();
         }
@@ -105,12 +114,19 @@ namespace APT
                     return;
                 }
 
+                // --- ולידציה: תקופת הדוח (תאריך התחלה <= תאריך סיום) ---
+                if (dtPeriodEnd.Value.Date < dtPeriodStart.Value.Date)
+                {
+                    MessageBox.Show("תאריך הסיום של התקופה חייב להיות אחרי תאריך ההתחלה (או שווה לו)", "תקופה לא תקינה", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 int nextId = FinancialReport.getNextReportId();
                 int seniorId = currentUser.getUserId();   // החותם הוא תמיד רואה החשבון המחובר
 
                 FinancialReport newReport = new FinancialReport(nextId, caseId, cmbReportType.SelectedItem.ToString(),
                     cmbReportFormat.SelectedItem.ToString(), dtGeneratedDate.Value, chkIsSigned.Checked,
-                    dtSignedDate.Value, cmbStatus.SelectedItem.ToString(), seniorId, true);
+                    dtSignedDate.Value, cmbStatus.SelectedItem.ToString(), seniorId, dtPeriodStart.Value, dtPeriodEnd.Value, true);
 
                 MessageBox.Show("הדוח נוצר בהצלחה", "הצלחה", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadReportsList();
@@ -170,7 +186,6 @@ namespace APT
                     return;
                 }
                 selectedReport.sign();
-                selectedReport.updateFinancialReport();   // שמירת החתימה ל-DB: isSigned / signedDate / status
                 MessageBox.Show("הדוח נחתם בהצלחה", "הצלחה", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadReportsList();
             }

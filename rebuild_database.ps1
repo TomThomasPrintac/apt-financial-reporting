@@ -77,17 +77,13 @@ Write-Host "  OK" -ForegroundColor Green
 
 $conn = New-AptConnection $Database
 
-# --- Step 1: teardown (procedures, then tables in FK-reverse order) ----
-Write-Host "`nStep 1: Dropping existing stored procedures and tables..." -ForegroundColor Yellow
-$dropProcs = "DECLARE @s NVARCHAR(MAX)=N''; SELECT @s+='DROP PROCEDURE ['+name+'];' FROM sys.procedures WHERE name LIKE 'sp_%'; IF LEN(@s)>0 EXEC sp_executesql @s;"
-Invoke-Sql $conn $dropProcs | Out-Null
-$tablesReverse = @(
-    "FinancialReports", "PayrollLedgerMatches", "PayrollRecords", "LedgerEntries",
-    "SourceFiles", "ClientCases", "SystemAdministrators", "Bookkeepers", "Interns",
-    "SeniorAccountants", "Clients", "Users"
-)
-foreach ($t in $tablesReverse) { Invoke-Sql $conn "DROP TABLE IF EXISTS [$t];" | Out-Null }
-Write-Host "  Dropped all sp_* procedures and 12 tables" -ForegroundColor Green
+# --- Step 1: teardown (procedures, then ALL FK constraints, then ALL tables) ----
+# Dropping foreign keys first makes table-drop order irrelevant — robust to any schema.
+Write-Host "`nStep 1: Dropping existing stored procedures, constraints and tables..." -ForegroundColor Yellow
+Invoke-Sql $conn "DECLARE @s NVARCHAR(MAX)=N''; SELECT @s+='DROP PROCEDURE ['+name+'];' FROM sys.procedures WHERE name LIKE 'sp_%'; IF LEN(@s)>0 EXEC sp_executesql @s;" | Out-Null
+Invoke-Sql $conn "DECLARE @s NVARCHAR(MAX)=N''; SELECT @s+='ALTER TABLE ['+OBJECT_SCHEMA_NAME(parent_object_id)+'].['+OBJECT_NAME(parent_object_id)+'] DROP CONSTRAINT ['+name+'];' FROM sys.foreign_keys; IF LEN(@s)>0 EXEC sp_executesql @s;" | Out-Null
+Invoke-Sql $conn "DECLARE @s NVARCHAR(MAX)=N''; SELECT @s+='DROP TABLE ['+name+'];' FROM sys.tables; IF LEN(@s)>0 EXEC sp_executesql @s;" | Out-Null
+Write-Host "  Dropped all sp_* procedures, foreign keys, and tables" -ForegroundColor Green
 
 # --- Step 2: tables ----------------------------------------------------
 Write-Host "`nStep 2: Creating tables (create_database.sql)..." -ForegroundColor Yellow
@@ -111,7 +107,7 @@ $cmd.CommandText = "SELECT COUNT(*) FROM sys.tables"
 $tableCount = [int]$cmd.ExecuteScalar()
 $cmd.CommandText = "SELECT COUNT(*) FROM sys.procedures WHERE name LIKE 'sp_%'"
 $procCount = [int]$cmd.ExecuteScalar()
-Write-Host ("  Tables: {0}/12   Stored procedures: {1}/60" -f $tableCount, $procCount) -ForegroundColor Cyan
+Write-Host ("  Tables: {0}/14   Stored procedures: {1}/68" -f $tableCount, $procCount) -ForegroundColor Cyan
 
 foreach ($t in @("Users", "Clients", "ClientCases", "SourceFiles", "LedgerEntries", "PayrollRecords", "PayrollLedgerMatches", "FinancialReports")) {
     $cmd.CommandText = "SELECT COUNT(*) FROM [$t]"
@@ -119,12 +115,12 @@ foreach ($t in @("Users", "Clients", "ClientCases", "SourceFiles", "LedgerEntrie
 }
 $conn.Close()
 
-if ($tableCount -ne 12 -or $procCount -ne 60) {
-    Write-Host "`nFAILED: expected 12 tables and 60 stored procedures." -ForegroundColor Red
+if ($tableCount -ne 14 -or $procCount -ne 68) {
+    Write-Host "`nFAILED: expected 14 tables and 68 stored procedures." -ForegroundColor Red
     exit 1
 }
 
 Write-Host "`n======================================" -ForegroundColor Green
-Write-Host " Rebuild complete - 12 tables, 60 procedures." -ForegroundColor Green
+Write-Host " Rebuild complete - 14 tables, 68 procedures." -ForegroundColor Green
 Write-Host "======================================" -ForegroundColor Green
 Write-Host "`nNext: run the app (dotnet run) - it will open to the login screen." -ForegroundColor Cyan

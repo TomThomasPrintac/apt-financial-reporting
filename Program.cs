@@ -27,6 +27,10 @@ namespace APT
         public static List<PayrollLedgerMatch> PayrollLedgerMatches;
         public static List<FinancialReport> FinancialReports;
 
+        // UC-06 — תבניות דוחות (לפי סוג קובץ מקור) + השדות שלהן
+        public static List<ReportTemplate> ReportTemplates;
+        public static List<TemplateField> TemplateFields;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -34,6 +38,7 @@ namespace APT
         static void Main()
         {
             ApplicationConfiguration.Initialize();
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
             // מטפלי שגיאות גלובליים — כדי שתקלה לא צפויה לא תפיל את האפליקציה בלי הסבר
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
@@ -85,6 +90,10 @@ namespace APT
 
             // 6. Load FinancialReport (references ClientCase and SeniorAccountant)
             FinancialReport.initFinancialReports();
+
+            // 7. Load UC-06 templates: ReportTemplate (base), then TemplateField (references ReportTemplate)
+            ReportTemplate.initReportTemplates();
+            TemplateField.initTemplateFields();
         }
     }
 }
