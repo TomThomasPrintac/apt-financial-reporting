@@ -46,7 +46,7 @@ namespace APT
 
         private void InitializeComboBoxes()
         {
-            cmbFileType.Items.AddRange(new object[] { "Payroll", "TrialBalance", "Depreciation" });
+            cmbFileType.Items.AddRange(new object[] { "Payroll", "TrialBalance", "Depreciation", "Ledger" });
             cmbStatus.Items.AddRange(new object[] { "Uploaded", "Processing", "Processed" });
             cmbDataFormat.Items.AddRange(new object[] { "CSV", "Excel", "XML" });
             // ברירת מחדל לכל ComboBox — מונע NullReferenceException אם שומרים בלי לבחור
@@ -108,26 +108,6 @@ namespace APT
         {
             ClearFields();
             listFiles.SelectedItems.Clear();
-        }
-
-        // בחירת קובץ מקור אמיתי מהדיסק — ממלא אוטומטית את שם הקובץ ומזהה את הפורמט לפי הסיומת
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog ofd = new OpenFileDialog())
-            {
-                ofd.Title = "בחר קובץ מקור";
-                ofd.Filter = "קבצי מקור (*.xlsx;*.xls;*.csv;*.xml)|*.xlsx;*.xls;*.csv;*.xml|כל הקבצים (*.*)|*.*";
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-
-                // ממלא את שם הקובץ (ללא הנתיב המלא — תואם את שדה fileName)
-                txtFileName.Text = System.IO.Path.GetFileName(ofd.FileName);
-
-                // זיהוי פורמט אוטומטי לפי סיומת הקובץ (תואם את ערכי cmbDataFormat)
-                string ext = System.IO.Path.GetExtension(ofd.FileName).ToLowerInvariant();
-                if (ext == ".csv") cmbDataFormat.SelectedItem = "CSV";
-                else if (ext == ".xlsx" || ext == ".xls") cmbDataFormat.SelectedItem = "Excel";
-                else if (ext == ".xml") cmbDataFormat.SelectedItem = "XML";
-            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -231,6 +211,46 @@ namespace APT
         private void btnNavBack_Click(object sender, EventArgs e)
         {
             GoToHome();
+        }
+
+        // --- צירוף קובץ מהמחשב (UC-02) ---
+
+        // עיון: פתיחת חלון בחירת קובץ סטנדרטי
+        private void btnAttach_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "בחר קובץ מקור לצירוף";
+                ofd.Filter = "קבצי מקור (Excel/CSV/XML)|*.xlsx;*.xls;*.csv;*.xml|כל הקבצים|*.*";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    ApplyPickedFile(ofd.FileName);
+            }
+        }
+
+        // גרירה: אישור שגוררים קובץ
+        private void dropZone_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        // גרירה: שחרור הקובץ באזור הגרירה
+        private void dropZone_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null && files.Length > 0)
+                ApplyPickedFile(files[0]);
+        }
+
+        // מילוי שם הקובץ + זיהוי פורמט הנתונים מהסיומת
+        private void ApplyPickedFile(string path)
+        {
+            txtFileName.Text = System.IO.Path.GetFileName(path);
+            string ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
+            if (ext == ".csv") cmbDataFormat.SelectedItem = "CSV";
+            else if (ext == ".xlsx" || ext == ".xls") cmbDataFormat.SelectedItem = "Excel";
+            else if (ext == ".xml") cmbDataFormat.SelectedItem = "XML";
+            lblAttached.Text = "צורף: " + System.IO.Path.GetFileName(path);
+            lblAttached.ForeColor = System.Drawing.Color.Green;
         }
 
         private void btnNavLogout_Click(object sender, EventArgs e)

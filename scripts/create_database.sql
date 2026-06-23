@@ -140,7 +140,8 @@ CREATE TABLE SourceFiles (
     CONSTRAINT CK_SourceFiles_FileType CHECK (fileType IN (
         N'Payroll',
         N'TrialBalance',
-        N'Depreciation'
+        N'Depreciation',
+        N'Ledger'
     )),
     CONSTRAINT CK_SourceFiles_Status CHECK (status IN (
         N'Uploaded',
@@ -243,6 +244,8 @@ CREATE TABLE FinancialReports (
     signedDate DATETIME2, -- nullable: report may not be signed yet
     status NVARCHAR(20) NOT NULL,
     senior_accountant_id INT, -- nullable: unsigned reports have no signer
+    periodStart DATETIME2, -- UC-05: report period start date (nullable for legacy reports)
+    periodEnd DATETIME2,   -- UC-05: report period end date
     CONSTRAINT FK_FinancialReports_ClientCase
         FOREIGN KEY (case_id) REFERENCES ClientCases(case_id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -264,6 +267,25 @@ CREATE TABLE FinancialReports (
         N'Signed',
         N'Submitted'
     ))
+);
+
+-- ============================================
+-- ReportTemplates (UC-06) — one template per source-file type; TemplateFields holds its fields
+-- ============================================
+CREATE TABLE ReportTemplates (
+    template_id INT NOT NULL PRIMARY KEY,
+    reportType NVARCHAR(50) NOT NULL,
+    templateName NVARCHAR(100) NOT NULL,
+    lastUpdated DATETIME2 NOT NULL
+);
+
+CREATE TABLE TemplateFields (
+    field_id INT NOT NULL PRIMARY KEY,
+    template_id INT NOT NULL,
+    fieldName NVARCHAR(100) NOT NULL,
+    CONSTRAINT FK_TemplateFields_Template
+        FOREIGN KEY (template_id) REFERENCES ReportTemplates(template_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 -- ============================================

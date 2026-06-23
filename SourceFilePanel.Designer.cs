@@ -43,18 +43,20 @@ namespace APT
             this.cmbStatus = new System.Windows.Forms.ComboBox();
             this.cmbDataFormat = new System.Windows.Forms.ComboBox();
             this.btnNew = new System.Windows.Forms.Button();
-            this.btnBrowse = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnBack = new System.Windows.Forms.Button();
+            this.btnAttach = new System.Windows.Forms.Button();
+            this.lblDropZone = new System.Windows.Forms.Label();
+            this.lblAttached = new System.Windows.Forms.Label();
             this.SuspendLayout();
 
             // Title Label
             this.lblTitle.AutoSize = false;
             this.lblTitle.Location = new Point(20, 55);
             this.lblTitle.Size = new Size(400, 25);
-            this.lblTitle.Text = "UC-02: העלאת קבצי מקור";
+            this.lblTitle.Text = "UC-02: העלת קבצים - קבצי מקור";
             this.lblTitle.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.DarkBlue;
 
@@ -89,11 +91,7 @@ namespace APT
             cmbCaseId.Location = new Point(580, y); cmbCaseId.Size = new Size(100, 24); cmbCaseId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList; y += 30;
 
             lblFileName.AutoSize = true; lblFileName.Location = new Point(700, y); lblFileName.Text = "שם קובץ";
-            txtFileName.Location = new Point(580, y); txtFileName.Size = new Size(100, 22);
-            btnBrowse.Location = new Point(475, y); btnBrowse.Size = new Size(95, 24); btnBrowse.Text = "עיון...";
-            btnBrowse.BackColor = System.Drawing.Color.FromArgb(96, 125, 139); btnBrowse.ForeColor = System.Drawing.Color.White; btnBrowse.UseVisualStyleBackColor = false;
-            btnBrowse.Click += (s, e) => btnBrowse_Click(s, e); this.toolTip.SetToolTip(btnBrowse, "בחר קובץ מהדיסק");
-            y += 30;
+            txtFileName.Location = new Point(580, y); txtFileName.Size = new Size(100, 22); y += 30;
 
             lblFileType.AutoSize = true; lblFileType.Location = new Point(700, y); lblFileType.Text = "סוג קובץ";
             cmbFileType.Location = new Point(580, y); cmbFileType.Size = new Size(100, 24); y += 30;
@@ -127,9 +125,22 @@ btnBack.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
             btnBack.Location = new Point(934, 10); btnBack.Size = new Size(80, 30); btnBack.Text = "חזור";
             btnBack.Click += (s, e) => btnBack_Click(s, e);
 
-            this.Controls.AddRange(new Control[] { this.navPanel, this.lblTitle, listFiles, lblFileId, txtFileId, lblCaseId, cmbCaseId, lblFileName, txtFileName, btnBrowse,
+            // --- צירוף קובץ מהמחשב: עיון (העלאה) או גרירה (drag & drop) ---
+            btnAttach.Location = new Point(470, 320); btnAttach.Size = new Size(150, 35); btnAttach.Text = "צרף קובץ (עיון)";
+            btnAttach.BackColor = System.Drawing.Color.FromArgb(66, 66, 66); btnAttach.ForeColor = System.Drawing.Color.White; btnAttach.UseVisualStyleBackColor = false;
+            btnAttach.Click += (s, e) => btnAttach_Click(s, e); this.toolTip.SetToolTip(btnAttach, "בחר קובץ מהמחשב");
+
+            lblDropZone.Location = new Point(470, 360); lblDropZone.Size = new Size(150, 70); lblDropZone.Text = "⬇ גרור קובץ לכאן";
+            lblDropZone.TextAlign = System.Drawing.ContentAlignment.MiddleCenter; lblDropZone.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            lblDropZone.BackColor = System.Drawing.Color.FromArgb(245, 245, 245); lblDropZone.AllowDrop = true;
+            lblDropZone.DragEnter += (s, e) => dropZone_DragEnter(s, e); lblDropZone.DragDrop += (s, e) => dropZone_DragDrop(s, e);
+
+            lblAttached.Location = new Point(470, 435); lblAttached.Size = new Size(160, 70); lblAttached.Text = "לא צורף קובץ";
+            lblAttached.ForeColor = System.Drawing.Color.DimGray;
+
+            this.Controls.AddRange(new Control[] { this.navPanel, this.lblTitle, listFiles, lblFileId, txtFileId, lblCaseId, cmbCaseId, lblFileName, txtFileName,
                 lblFileType, cmbFileType, lblUploadDate, dtUploadDate, lblStatus, cmbStatus, lblDataFormat, cmbDataFormat,
-                btnNew, btnSave, btnUpdate, btnDelete, btnBack });
+                btnNew, btnSave, btnUpdate, btnDelete, btnBack, btnAttach, lblDropZone, lblAttached });
 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -159,11 +170,13 @@ btnBack.Anchor = (AnchorStyles.Top | AnchorStyles.Right);
         private System.Windows.Forms.ComboBox cmbStatus;
         private System.Windows.Forms.ComboBox cmbDataFormat;
         private System.Windows.Forms.Button btnNew;
-        private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnBack;
+        private System.Windows.Forms.Button btnAttach;
+        private System.Windows.Forms.Label lblDropZone;
+        private System.Windows.Forms.Label lblAttached;
         private System.Windows.Forms.Panel navPanel;
         private System.Windows.Forms.Button btnHome;
         private System.Windows.Forms.Button btnNavBack;

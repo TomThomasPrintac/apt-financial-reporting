@@ -17,10 +17,12 @@ namespace APT
         private DateTime signedDate;
         private string status;
         private int seniorAccountantId;
+        private DateTime periodStart;
+        private DateTime periodEnd;
 
         public FinancialReport(int reportId, int caseId, string reportType, string reportFormat,
                               DateTime generatedDate, bool isSigned, DateTime signedDate,
-                              string status, int seniorAccountantId, bool is_new)
+                              string status, int seniorAccountantId, DateTime periodStart, DateTime periodEnd, bool is_new)
         {
             this.reportId = reportId;
             this.caseId = caseId;
@@ -31,6 +33,8 @@ namespace APT
             this.signedDate = signedDate;
             this.status = status;
             this.seniorAccountantId = seniorAccountantId;
+            this.periodStart = periodStart;
+            this.periodEnd = periodEnd;
             if (is_new)
             {
                 createFinancialReport();
@@ -47,11 +51,15 @@ namespace APT
         public DateTime getSignedDate() { return this.signedDate; }
         public string getStatus() { return this.status; }
         public int getSeniorAccountantId() { return this.seniorAccountantId; }
+        public DateTime getPeriodStart() { return this.periodStart; }
+        public DateTime getPeriodEnd() { return this.periodEnd; }
 
         public void setIsSigned(bool isSigned) { this.isSigned = isSigned; }
         public void setSignedDate(DateTime signedDate) { this.signedDate = signedDate; }
         public void setStatus(string status) { this.status = status; }
         public void setSeniorAccountantId(int seniorAccountantId) { this.seniorAccountantId = seniorAccountantId; }
+        public void setPeriodStart(DateTime periodStart) { this.periodStart = periodStart; }
+        public void setPeriodEnd(DateTime periodEnd) { this.periodEnd = periodEnd; }
 
         public void sign()
         {
@@ -74,6 +82,8 @@ namespace APT
             cmd.Parameters.AddWithValue("@signedDate", this.signedDate);
             cmd.Parameters.AddWithValue("@status", this.status);
             cmd.Parameters.AddWithValue("@senior_accountant_id", this.seniorAccountantId);
+            cmd.Parameters.AddWithValue("@periodStart", this.periodStart);
+            cmd.Parameters.AddWithValue("@periodEnd", this.periodEnd);
             SQL_CON SC = new SQL_CON();
             SC.execute_non_query(cmd);
         }
@@ -92,6 +102,8 @@ namespace APT
             cmd.Parameters.AddWithValue("@signedDate", this.signedDate);
             cmd.Parameters.AddWithValue("@status", this.status);
             cmd.Parameters.AddWithValue("@senior_accountant_id", this.seniorAccountantId);
+            cmd.Parameters.AddWithValue("@periodStart", this.periodStart);
+            cmd.Parameters.AddWithValue("@periodEnd", this.periodEnd);
             SQL_CON SC = new SQL_CON();
             SC.execute_non_query(cmd);
         }
@@ -138,10 +150,12 @@ namespace APT
                 DateTime signedDate = rdr.IsDBNull(6) ? DateTime.MinValue : rdr.GetDateTime(6);
                 string status = rdr.GetString(7);
                 int seniorAccountantId = rdr.IsDBNull(8) ? 0 : rdr.GetInt32(8);
+                DateTime periodStart = rdr.IsDBNull(9) ? DateTime.MinValue : rdr.GetDateTime(9);
+                DateTime periodEnd = rdr.IsDBNull(10) ? DateTime.MinValue : rdr.GetDateTime(10);
 
                 FinancialReport fr = new FinancialReport(reportId, caseId, reportType, reportFormat,
                                                         generatedDate, isSigned, signedDate,
-                                                        status, seniorAccountantId, false);
+                                                        status, seniorAccountantId, periodStart, periodEnd, false);
                 Program.FinancialReports.Add(fr);
             }
             rdr.Close();

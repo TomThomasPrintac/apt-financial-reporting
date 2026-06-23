@@ -696,11 +696,13 @@ CREATE PROCEDURE sp_FinancialReports_create
     @isSigned BIT,
     @signedDate DATETIME2,
     @status NVARCHAR(20),
-    @senior_accountant_id INT
+    @senior_accountant_id INT,
+    @periodStart DATETIME2,
+    @periodEnd DATETIME2
 AS
 BEGIN
-    INSERT INTO FinancialReports (report_id, case_id, reportType, reportFormat, generatedDate, isSigned, signedDate, status, senior_accountant_id)
-    VALUES (@report_id, @case_id, @reportType, @reportFormat, @generatedDate, @isSigned, @signedDate, @status, @senior_accountant_id);
+    INSERT INTO FinancialReports (report_id, case_id, reportType, reportFormat, generatedDate, isSigned, signedDate, status, senior_accountant_id, periodStart, periodEnd)
+    VALUES (@report_id, @case_id, @reportType, @reportFormat, @generatedDate, @isSigned, @signedDate, @status, @senior_accountant_id, @periodStart, @periodEnd);
 END;
 GO
 
@@ -713,7 +715,9 @@ CREATE PROCEDURE sp_FinancialReports_update
     @isSigned BIT,
     @signedDate DATETIME2,
     @status NVARCHAR(20),
-    @senior_accountant_id INT
+    @senior_accountant_id INT,
+    @periodStart DATETIME2,
+    @periodEnd DATETIME2
 AS
 BEGIN
     UPDATE FinancialReports
@@ -724,7 +728,9 @@ BEGIN
         isSigned = @isSigned,
         signedDate = @signedDate,
         status = @status,
-        senior_accountant_id = @senior_accountant_id
+        senior_accountant_id = @senior_accountant_id,
+        periodStart = @periodStart,
+        periodEnd = @periodEnd
     WHERE report_id = @report_id;
 END;
 GO
@@ -752,5 +758,87 @@ AS
 BEGIN
     SELECT * FROM FinancialReports
     WHERE report_id = @report_id;
+END;
+GO
+
+-- ============================================
+-- UC-06: Report Template Procedures
+-- ============================================
+
+CREATE PROCEDURE sp_ReportTemplates_get_all
+AS
+BEGIN
+    SELECT template_id, reportType, templateName, lastUpdated FROM ReportTemplates;
+END;
+GO
+
+CREATE PROCEDURE sp_ReportTemplates_create
+    @template_id INT,
+    @reportType NVARCHAR(50),
+    @templateName NVARCHAR(100),
+    @lastUpdated DATETIME2
+AS
+BEGIN
+    INSERT INTO ReportTemplates (template_id, reportType, templateName, lastUpdated)
+    VALUES (@template_id, @reportType, @templateName, @lastUpdated);
+END;
+GO
+
+CREATE PROCEDURE sp_ReportTemplates_update
+    @template_id INT,
+    @reportType NVARCHAR(50),
+    @templateName NVARCHAR(100),
+    @lastUpdated DATETIME2
+AS
+BEGIN
+    UPDATE ReportTemplates
+    SET reportType = @reportType, templateName = @templateName, lastUpdated = @lastUpdated
+    WHERE template_id = @template_id;
+END;
+GO
+
+CREATE PROCEDURE sp_ReportTemplates_delete
+    @template_id INT
+AS
+BEGIN
+    DELETE FROM ReportTemplates WHERE template_id = @template_id;
+END;
+GO
+
+CREATE PROCEDURE sp_TemplateFields_get_all
+AS
+BEGIN
+    SELECT field_id, template_id, fieldName FROM TemplateFields;
+END;
+GO
+
+CREATE PROCEDURE sp_TemplateFields_create
+    @field_id INT,
+    @template_id INT,
+    @fieldName NVARCHAR(100)
+AS
+BEGIN
+    INSERT INTO TemplateFields (field_id, template_id, fieldName)
+    VALUES (@field_id, @template_id, @fieldName);
+END;
+GO
+
+CREATE PROCEDURE sp_TemplateFields_update
+    @field_id INT,
+    @template_id INT,
+    @fieldName NVARCHAR(100)
+AS
+BEGIN
+    UPDATE TemplateFields
+    SET template_id = @template_id, fieldName = @fieldName
+    WHERE field_id = @field_id;
+END;
+GO
+
+CREATE PROCEDURE sp_TemplateFields_delete
+    @field_id INT
+AS
+BEGIN
+    DELETE FROM TemplateFields WHERE field_id = @field_id;
 END;
 GO

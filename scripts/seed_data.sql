@@ -309,3 +309,32 @@ GO
 --   • All status values covered: Draft, Generated, Signed, Submitted
 --
 -- No orphaned foreign keys — every FK references an existing row in load order.
+GO
+
+-- ============================================
+-- ReportTemplates + TemplateFields (UC-06) — one template per financial report (BS / P&L / Cash Flow)
+-- ============================================
+INSERT INTO ReportTemplates (template_id, reportType, templateName, lastUpdated) VALUES
+(1, N'BS',        N'תבנית מאזן (Balance Sheet)',      SYSDATETIME()),
+(2, N'P&L',       N'תבנית רווח והפסד (P&L)',          SYSDATETIME()),
+(3, N'Cash Flow', N'תבנית תזרים מזומנים (Cash Flow)', SYSDATETIME());
+GO
+
+INSERT INTO TemplateFields (field_id, template_id, fieldName) VALUES
+(1, 1, N'נכסים שוטפים'),
+(2, 1, N'נכסים קבועים'),
+(3, 1, N'סך נכסים'),
+(4, 1, N'התחייבויות שוטפות'),
+(5, 1, N'התחייבויות לזמן ארוך'),
+(6, 1, N'הון עצמי'),
+(7, 2, N'הכנסות'),
+(8, 2, N'עלות המכר'),
+(9, 2, N'רווח גולמי'),
+(10, 2, N'הוצאות תפעול'),
+(11, 2, N'רווח תפעולי'),
+(12, 2, N'רווח נקי'),
+(13, 3, N'תזרים מפעילות שוטפת'),
+(14, 3, N'תזרים מפעילות השקעה'),
+(15, 3, N'תזרים מפעילות מימון'),
+(16, 3, N'שינוי נטו במזומנים');
+GO
