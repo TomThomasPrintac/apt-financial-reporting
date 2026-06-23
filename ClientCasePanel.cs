@@ -17,6 +17,7 @@ namespace APT
         public ClientCasePanel(SeniorAccountant user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             LoadCasesList();
             if (cmbStatus.Items.Count > 0) cmbStatus.SelectedIndex = 0;  // ברירת מחדל — מונע NRE בשמירה

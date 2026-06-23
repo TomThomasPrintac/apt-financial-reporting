@@ -14,6 +14,7 @@ namespace APT
         public LoginPanel()
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             LoadLogo();
         }
 

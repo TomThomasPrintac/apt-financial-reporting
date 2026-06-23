@@ -17,6 +17,7 @@ namespace APT
         public SourceFilePanel(User user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             LoadFilesList();
             InitializeComboBoxes();
@@ -140,7 +141,7 @@ namespace APT
                                                     cmbFileType.SelectedItem.ToString(), dtUploadDate.Value,
                                                     cmbStatus.SelectedItem.ToString(), cmbDataFormat.SelectedItem.ToString(), true);
 
-                MessageBox.Show("הקובץ נוצר בהצלחה", "הצלחה", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("הקובץ נוסף בהצלחה כרשומה חדשה", "הצלחה", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadFilesList();
                 ClearFields();
             }
@@ -241,15 +242,24 @@ namespace APT
                 ApplyPickedFile(files[0]);
         }
 
-        // מילוי שם הקובץ + זיהוי פורמט הנתונים מהסיומת
+        // צירוף קובץ: מתחיל תמיד רשומה חדשה לצד הקבצים הקיימים — לא מחליף רשומה שנבחרה.
+        // מבטל את הבחירה הנוכחית, מנקה את המזהה, וקובע ערכי ברירת מחדל להעלאה חדשה.
+        // התיק שנבחר נשמר כדי שאפשר יהיה לצרף כמה קבצים לאותו תיק בזה אחר זה.
         private void ApplyPickedFile(string path)
         {
-            txtFileName.Text = System.IO.Path.GetFileName(path);
+            listFiles.SelectedItems.Clear();
+            selectedFile = null;
+            txtFileId.Text = "";
+            cmbStatus.SelectedItem = "Uploaded";
+            dtUploadDate.Value = DateTime.Now;
+
+            string name = System.IO.Path.GetFileName(path);
+            txtFileName.Text = name;
             string ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
             if (ext == ".csv") cmbDataFormat.SelectedItem = "CSV";
             else if (ext == ".xlsx" || ext == ".xls") cmbDataFormat.SelectedItem = "Excel";
             else if (ext == ".xml") cmbDataFormat.SelectedItem = "XML";
-            lblAttached.Text = "צורף: " + System.IO.Path.GetFileName(path);
+            lblAttached.Text = "צורף: " + name + " (יתווסף כקובץ חדש)";
             lblAttached.ForeColor = System.Drawing.Color.Green;
         }
 

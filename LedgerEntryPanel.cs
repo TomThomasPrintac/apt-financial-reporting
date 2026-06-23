@@ -12,6 +12,7 @@ namespace APT
         public LedgerEntryPanel(Intern user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             LoadEntriesList();
             cmbAccountType.Items.AddRange(new object[] { "Asset", "Liability", "Equity", "Revenue", "Expense" });

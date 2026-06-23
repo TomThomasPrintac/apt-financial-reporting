@@ -90,7 +90,12 @@ namespace APT
         {
             if (Program.SourceFiles == null || Program.SourceFiles.Count == 0)
                 return 1;
-            return Program.SourceFiles[Program.SourceFiles.Count - 1].getFileId() + 1;
+            // max(id) + 1 — כל קובץ חדש מתווסף לצד הקיימים בלי התנגשות מזהים,
+            // גם אחרי מחיקות (לא מסתמכים על האיבר האחרון ברשימה)
+            int max = 0;
+            foreach (SourceFile sf in Program.SourceFiles)
+                if (sf.getFileId() > max) max = sf.getFileId();
+            return max + 1;
         }
 
         public static void initSourceFiles()

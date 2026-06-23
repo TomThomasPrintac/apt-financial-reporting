@@ -15,6 +15,7 @@ namespace APT
         public ReportTemplateMenuPanel(SeniorAccountant user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             LoadTemplates();
         }

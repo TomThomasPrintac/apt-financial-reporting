@@ -16,6 +16,7 @@ namespace APT
         public ClientHomePanel(Client user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             lblWelcome.Text = $"ברוכה הבאה, {currentUser.getCompanyName()}";
             lblMessage.Text = "לא הוקצו תפקידים בגרסה זו של המערכת.";

@@ -16,6 +16,7 @@ namespace APT
         public InternHomePanel(Intern user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             lblWelcome.Text = $"ברוכה הבאה, {currentUser.getEmail()}";
         }

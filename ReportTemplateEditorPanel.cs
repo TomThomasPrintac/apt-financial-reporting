@@ -18,6 +18,7 @@ namespace APT
         public ReportTemplateEditorPanel(SeniorAccountant user, ReportTemplate template)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             this.template = template;
             lblTitle.Text = "עריכת תבנית: " + template.getTemplateName() + "  (" + template.getReportType() + ")";

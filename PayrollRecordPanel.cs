@@ -11,6 +11,7 @@ namespace APT
         public PayrollRecordPanel(Intern user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             LoadRecordsList();
         }

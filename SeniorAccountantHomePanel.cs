@@ -16,6 +16,7 @@ namespace APT
         public SeniorAccountantHomePanel(SeniorAccountant user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             lblWelcome.Text = $"ברוכה הבאה, {currentUser.getEmail()}";
         }

@@ -13,6 +13,7 @@ namespace APT
         public PayrollLedgerMatchPanel(Intern user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             LoadMatchesList();
             cmbMatchStatus.Items.AddRange(new object[] { "Matched", "Unmatched", "Variance", "Requires Review" });

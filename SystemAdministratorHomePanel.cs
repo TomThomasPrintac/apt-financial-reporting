@@ -16,6 +16,7 @@ namespace APT
         public SystemAdministratorHomePanel(SystemAdministrator user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             lblWelcome.Text = $"ברוכה הבאה, {currentUser.getEmail()}";
             lblMessage.Text = "לא הוקצו תפקידים בגרסה זו של המערכת.";

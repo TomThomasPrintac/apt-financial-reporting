@@ -11,6 +11,7 @@ namespace APT
         public FinancialReportPanel(SeniorAccountant user)
         {
             InitializeComponent();
+            UiCenter.Enable(this);
             this.currentUser = user;
             LoadReportsList();
             cmbReportType.Items.AddRange(new object[] { "BalanceSheet", "IncomeStatement", "CashFlow" });
